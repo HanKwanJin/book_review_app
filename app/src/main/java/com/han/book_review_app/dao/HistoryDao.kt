@@ -7,7 +7,7 @@ import com.han.book_review_app.model.History
 
 @Dao
 interface HistoryDao {
-    @Query("SELECT * FROM History")
+    @Query("SELECT * FROM history")
     fun getAll(): List<History>
 
     @Insert

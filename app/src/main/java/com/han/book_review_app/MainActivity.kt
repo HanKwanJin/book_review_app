@@ -1,5 +1,6 @@
 package com.han.book_review_app
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -37,11 +38,8 @@ class MainActivity : AppCompatActivity() {
 
         initRecyclerView()
         initHistoryRecyclerView()
-        db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "BookSearchDB"
-        ).build()
+        initSearchEditText()
+        db = getAppDatabase(this)
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://book.interpark.com")
@@ -126,7 +124,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView(){
-        adapter = BookAdapter()
+        adapter = BookAdapter(itemClickedListener = {
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("bookModel", it)
+            startActivity(intent)
+
+        })
         binding.bookRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.bookRecyclerView.adapter = adapter
     }
@@ -136,8 +139,6 @@ class MainActivity : AppCompatActivity() {
         })
         binding.historyRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.historyRecyclerView.adapter = historyAdapter
-
-        initSearchEditText()
     }
 
     private fun initSearchEditText() {
